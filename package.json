@@ -21,7 +21,7 @@
     "@vueuse/router": "^13.1.0",
     "consola": "^3.4.2",
     "dom-parse": "^3.2.1",
-    "linkedom": "^0.18.9",
+    "linkedom": "^0.18.12",
     "meilisearch": "^0.49.0",
     "nitro-cloudflare-dev": "^0.2.1",
     "nuxt": "^3.16.2",
