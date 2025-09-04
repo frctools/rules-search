@@ -9,6 +9,12 @@ export const useYearsNav = () => {
       value: "2025",
       emoji: "🌊",
     },
+    {
+      label: "2026 - Decode",
+      value: "2026",
+      emoji: "🔑",
+    },
+
     { label: "2025 - INTO THE DEEP", value: "2025-ftc", emoji: "🪸" },
 
     {
@@ -32,5 +38,3 @@ export const useYearsNav = () => {
 export const useYears = () => {
   return useYearsNav().map((year) => year.value);
 };
-
-

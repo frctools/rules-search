@@ -47,7 +47,7 @@ export const getDocument = async (currYear: number, ftc: boolean = false) => {
   return document;
 };
 /**
- * Fixes image URLs since we aren't hosted on the same path as the real manual
+ * Fixes image URLs since we arefn't hosted on the same path as the real manual
  * @param currYear Current year
  * @param document The document to fix
  * @param ftc      Whether it is the FTC manual
@@ -437,7 +437,7 @@ export const scrapeRules = async () => {
   }
   const ftc = process.env.FTC == "true";
   const currYear = ftc
-    ? 2025
+    ? 2026
     : process.env.YEAR_SPECIFIC
     ? parseInt(process.env.YEAR_SPECIFIC)
     : new Date().getFullYear();
