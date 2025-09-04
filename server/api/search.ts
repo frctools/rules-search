@@ -15,8 +15,7 @@ export default defineEventHandler(async (event) => {
   }
 
   const MEILI_READ_KEY = `2db41b6a1ce3e0daf62e36d67f996e60f41a07807588971a050d7bfb74df5efe`;
-  const query = await 
-  (event, (data) => {
+  const query = await getValidatedQuery(event, (data) => {
     return z
       .object({
         query: z.string().default(""),
