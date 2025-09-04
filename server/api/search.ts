@@ -15,11 +15,12 @@ export default defineEventHandler(async (event) => {
   }
 
   const MEILI_READ_KEY = `2db41b6a1ce3e0daf62e36d67f996e60f41a07807588971a050d7bfb74df5efe`;
-  const query = await getValidatedQuery(event, (data) => {
+  const query = await 
+  (event, (data) => {
     return z
       .object({
         query: z.string().default(""),
-        year: z.number({ coerce: true }).default(new Date().getFullYear()),
+        year: z.string({ coerce: true }).default(new Date().getFullYear().toString()),
         semantic: z.enum(['true', 'false']).transform((value) => value === 'true').default(true),
         sections: z.string().optional(),
       })
