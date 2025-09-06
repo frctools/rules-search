@@ -35,7 +35,7 @@
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.16",
     "@types/turndown": "^5.0.5",
-    "jsdom": "^23.2.0",
+    "jsdom": "^26.1.0",
     "tsx": "^4.19.3"
   }
 }
