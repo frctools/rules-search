@@ -33,4 +33,4 @@ jobs:
           FTC: ${{ matrix.ftc }}
           YEAR_SPECIFIC: ${{ matrix.year }}
           MEILI_WRITE_KEY: ${{ secrets.MEILI_WRITE_KEY }}
-          OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
+          GEMINI_KEY: ${{ secrets.GEMINI_KEY }}
