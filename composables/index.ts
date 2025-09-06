@@ -11,7 +11,7 @@ export const useYearsNav = () => {
     },
     {
       label: "2026 - Decode",
-      value: "2026",
+      value: "2026-ftc",
       emoji: "🔑",
     },
 
