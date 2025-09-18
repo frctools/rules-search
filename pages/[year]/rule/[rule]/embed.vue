@@ -5,7 +5,7 @@
       <div
         ref="container"
         :class="{ 'max-h-[320px] overflow-hidden': !expanded }"
-        class="relative pb-10 transition-all duration-300 max-h-1000"
+        class="relative pb-10 "
       >
         <RenderHtml :html="data.text" />
         <div
