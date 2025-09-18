@@ -41,6 +41,7 @@
 
 <script setup>
 import { upperFirst } from "scule";
+import { useResizeObserver } from "@vueuse/core";
 const route = useRoute();
 const validYears = useYears();
 if (!validYears.includes(route.params.year)) {
