@@ -54,6 +54,9 @@ const isOverflowing = ref(false);
 const updateMainWindow = () => {
   window.parent.postMessage(`${el.value?.scrollHeight}`, '*');
 };
+useResizeObserver(el, (entries) => {
+   updateMainWindow();
+})
 
 const buttonHandler = () => {
    expanded.value = !expanded.value;
