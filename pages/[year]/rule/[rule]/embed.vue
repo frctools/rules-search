@@ -53,7 +53,7 @@ const el = useTemplateRef("container");
 const isOverflowing = ref(false);
 
 const updateMainWindow = () => {
-  window.parent.postMessage(`${el.value?.scrollHeight}`, '*');
+  window.parent.postMessage(`${el.value?.clientHeight}`, '*');
 };
 useResizeObserver(el, (entries) => {
    updateMainWindow();
