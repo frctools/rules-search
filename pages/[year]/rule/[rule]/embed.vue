@@ -1,7 +1,6 @@
 <template>
   <div>
     <UContainer class="flex flex-col gap-4 mt-4" v-if="!error">
-      <UBreadcrumb :items="items" />
 
       <div
         ref="container"
