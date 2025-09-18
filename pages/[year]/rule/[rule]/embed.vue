@@ -5,16 +5,19 @@
 
       <div
         ref="container"
-        :class="{ 'max-h-100 overflow-hidden': !expanded }"
+        :class="{ 'max-h-[320px] overflow-hidden': !expanded }"
         class="relative"
       >
         <RenderHtml :html="data.text" />
         <div
           v-if="isOverflowing"
           class="bottom-0 w-full absolute bg-white/45 backdrop-blur-md p-2 cursor-pointer font-bold"
-          @click="expanded = !expanded"
+          @click="buttonHandler"
         >
-          {{expanded ? `Shrink Rule`:`Expand Rule`}} <UIcon :name="expanded ? `heroicons:arrow-up`: `heroicons:arrow-down`"></UIcon>
+          {{ expanded ? `Shrink Rule` : `Expand Rule` }}
+          <UIcon
+            :name="expanded ? `heroicons:arrow-up` : `heroicons:arrow-down`"
+          ></UIcon>
         </div>
       </div>
     </UContainer>
@@ -46,8 +49,18 @@ const year = ref(route.params.year);
 const expanded = ref(false);
 const el = useTemplateRef("container");
 const isOverflowing = ref(false);
+
+const updateMainWindow = () => {
+  window.parent.postMessage(el.value?.scrollHeight);
+};
+
+const buttonHandler = () => {
+   expanded = !expanded;
+   updateMainWindow();
+}
 onMounted(() => {
   isOverflowing.value = el.value?.scrollHeight > el.value?.clientHeight;
+  updateMainWindow();
 });
 const rule = ref(route.params.rule);
 const { data, status, error, clear } = await useFetch("/api/rule", {
