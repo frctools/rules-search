@@ -5,7 +5,7 @@
       <div
         ref="container"
         :class="{ 'max-h-[320px] overflow-hidden': !expanded }"
-        class="relative pb-10 "
+        class="relative pb-10 transition-all duration-300 max-h-1000"
       >
         <RenderHtml :html="data.text" />
         <div
@@ -13,7 +13,7 @@
           :class="{'cursor-pointer': isOverflowing}"
           @click="buttonHandler"
         >
-        <div class="flex gap-1 justify-center" v-if="isOverflowing" >
+        <div class="flex gap-1 justify-center items-center" v-if="isOverflowing" >
           {{ expanded ? `Shrink Rule` : `Expand Rule` }}
           <UIcon
             :name="expanded ? `heroicons:arrow-up` : `heroicons:arrow-down`"
@@ -53,6 +53,7 @@ const el = useTemplateRef("container");
 const isOverflowing = ref(false);
 
 const updateMainWindow = () => {
+   console.log(el.value.clientHeight)
   window.parent.postMessage(`${el.value?.clientHeight}`, '*');
 };
 useResizeObserver(el, (entries) => {
