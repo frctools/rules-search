@@ -1,6 +1,6 @@
 <template>
   <div>
-    <UContainer class="flex flex-col gap-4 mt-4" v-if="!error">
+    <UContainer class="flex flex-col gap-4" v-if="!error">
 
       <div
         ref="container"
@@ -10,13 +10,15 @@
         <RenderHtml :html="data.text" />
         <div
           v-if="isOverflowing"
-          class="bottom-0 w-full absolute bg-white/45 backdrop-blur-md p-2 cursor-pointer font-bold"
+          class="bottom-0 w-full absolute bg-white/45 backdrop-blur-md p-2 cursor-pointer font-bold justify-between flex"
           @click="buttonHandler"
         >
+        <div class="flex gap-1 justify-center">
           {{ expanded ? `Shrink Rule` : `Expand Rule` }}
           <UIcon
             :name="expanded ? `heroicons:arrow-up` : `heroicons:arrow-down`"
-          ></UIcon>
+          ></UIcon></div>
+         <UButton size="xs" to="/" target="_blank">Search Rules on <span class="font-bold font-display" @click="(e)=>e.stopPropagation()">FRCTools</span></UButton>
         </div>
       </div>
     </UContainer>
