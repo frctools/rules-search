@@ -9,11 +9,11 @@
       >
         <RenderHtml :html="data.text" />
         <div
-          v-if="isOverflowing"
           class="bottom-0 w-full absolute bg-white/45 backdrop-blur-md p-2 cursor-pointer font-bold justify-between flex"
+          :class="{'cursor-pointer': isOverflowing}"
           @click="buttonHandler"
         >
-        <div class="flex gap-1 justify-center">
+        <div class="flex gap-1 justify-center" v-if="isOverflowing" >
           {{ expanded ? `Shrink Rule` : `Expand Rule` }}
           <UIcon
             :name="expanded ? `heroicons:arrow-up` : `heroicons:arrow-down`"
