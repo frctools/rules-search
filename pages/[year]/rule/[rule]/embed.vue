@@ -9,7 +9,7 @@
       >
         <RenderHtml :html="data.text" />
         <div
-          class="bottom-0 w-full absolute bg-white/45 backdrop-blur-md p-2 cursor-pointer font-bold justify-between flex"
+          class="bottom-0 w-full absolute bg-white/45 dark:bg-gray-800/45  backdrop-blur-md p-2 cursor-pointer font-bold justify-between flex"
           :class="{'cursor-pointer': isOverflowing}"
           @click="buttonHandler"
         >
