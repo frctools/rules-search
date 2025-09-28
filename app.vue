@@ -59,8 +59,8 @@ const embed = computed(()=> {
 useSeoMeta({
   titleTemplate: (x) => (x ? `${x} | FRCTools` : `FRCTools`),
   ogTitle: "FRCTools",
-  description: "Search the FRC Manual",
-  ogDescription: "Search the FRC Manual",
+  description: `Search the ${route.path.includes("ftc")? 'FTC': 'FRC'} Manual`,
+  ogDescription: `Search the ${route.path.includes("ftc")? 'FTC': 'FRC'} Manual`,
 });
 useHead({
   htmlAttrs: {
