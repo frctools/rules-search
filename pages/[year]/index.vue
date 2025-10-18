@@ -50,7 +50,7 @@
             <span v-if="!query.length"
               >Nothing yet.
               <span
-                class="bold text-blue-500 cursor-pointer"
+                class="bold text-havelock-blue-500 cursor-pointer"
                 @click="randomSearch"
                 >Search something!</span
               ></span

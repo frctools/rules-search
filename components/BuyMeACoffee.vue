@@ -1,6 +1,6 @@
 <template>
   <a
-    class="leading-9 h-[37px] no-underline inline-flex text-gray-50 bg-blue-600 border text-[23px] tracking-[0.6px] shadow-[0px_1px_2px_rgba(190,190,190,0.5)] box-border transition-[0.3s] duration-[all] ease-linear m-0 px-[9px] py-px rounded-[3px] border-solid border-transparent bmc-button hover:text-gray-100"
+    class="leading-9 h-[37px] no-underline inline-flex text-gray-50 bg-havelock-blue-600 border text-[23px] tracking-[0.6px] shadow-[0px_1px_2px_rgba(190,190,190,0.5)] box-border transition-[0.3s] duration-[all] ease-linear m-0 px-[9px] py-px rounded-[3px] border-solid border-transparent bmc-button hover:text-gray-100"
     target="_blank"
     href="https://www.buymeacoffee.com/grahamsh"
   >

@@ -8,7 +8,7 @@ export default defineAppConfig({
       },
     
       colors: {
-      primary: "blue",
+      primary: "havelock-blue",
       neutral: "zinc",
     },
   },

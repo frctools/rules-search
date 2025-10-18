@@ -2,7 +2,7 @@
   <UModal>
     <template #body>
       Congratulations for winning 2025 bingo! Make sure to check out our
-      <NuxtLink class="bold text-blue-400" @click="navigate" to="/"
+      <NuxtLink class="bold text-havelock-blue-400" @click="navigate" to="/"
         >rule search</NuxtLink
       >!
     </template>

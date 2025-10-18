@@ -31,7 +31,7 @@
       </div>
       <div class="italic flex w-full justify-center">
         a frctools project - check out our rules search at
-        <NuxtLink to="/" class="bold text-blue-500 ml-1">
+        <NuxtLink to="/" class="bold text-havelock-blue-500 ml-1">
           https://frctools.com</NuxtLink
         >
       </div>

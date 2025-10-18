@@ -6,14 +6,14 @@
         <NuxtPage />
       </div>
       <div
-        class="w-full flex justify-center gap-4 md:gap-8 items-center p-2 bg-gray-50/50 dark:bg-blue-950/50 md:flex-row flex-col"
+        class="w-full flex justify-center gap-4 md:gap-8 items-center p-2 bg-gray-50/50 dark:bg-havelock-blue-950/50 md:flex-row flex-col"
         v-if="!embed"
       >
         <span class="font-display italic"
           >built by
           <a
             href="https://grahamsh.com"
-            class="underline text-blue-700 font-semibold"
+            class="underline text-havelock-blue-700 font-semibold"
             >grahamsh</a
           ></span
         >

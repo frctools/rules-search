@@ -4,16 +4,33 @@
 :root {
   --ui-header-height: calc(var(--spacing) * 16);
 }
+
 @plugin "@tailwindcss/typography";
 
 @theme {
   --font-display: "Bricolage Grotesque", sans-serif;
+
+  --color-havelock-blue-50: #f1f8fd;
+  --color-havelock-blue-100: #e0f0f9;
+  --color-havelock-blue-200: #c8e4f5;
+  --color-havelock-blue-300: #a3d4ed;
+  --color-havelock-blue-400: #77bbe3;
+  --color-havelock-blue-500: #56a1db;
+  --color-havelock-blue-600: #4e8fd1;
+  --color-havelock-blue-700: #3873bd;
+  --color-havelock-blue-800: #335e9a;
+  --color-havelock-blue-900: #2e507a;
+  --color-havelock-blue-950: #20324b;
+
 }
 
-div:is([style*="margin-left: 1.0in; margin-right: 1.0in"]):has(.BlueBox), div:is([style*="margin-left:1.0in;margin-right:1.0in"]):has(.BlueBox) {
+div:is([style*="margin-left: 1.0in; margin-right: 1.0in"]):has(.BlueBox),
+div:is([style*="margin-left:1.0in;margin-right:1.0in"]):has(.BlueBox) {
   margin-left: 0 !important;
   margin-right: 0 !important;
 }
+
 .thisClassDoesntExist {
-   font-family: "Bricolage Grotesque"; /* silly little hack to make fonts plugin install it */
+  font-family: "Bricolage Grotesque";
+  /* silly little hack to make fonts plugin install it */
 }
