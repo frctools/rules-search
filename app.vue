@@ -50,7 +50,6 @@ onMounted(() => {
     });
   }
 });
-const route = useRoute();
 const embed = computed(()=> {
    return route.path.includes('embed');
 })
