@@ -1,3 +1,4 @@
+import fs from "fs";
 import { JSDOM } from "jsdom";
 import { consola } from "consola";
 import { MeiliSearch, MeiliSearchApiError, type Embedders } from "meilisearch";
@@ -5,52 +6,20 @@ import TurndownService from "turndown";
 
 export const ruleRegex = /^([a-zA-Z])(\d{3})$/;
 const turndown = new TurndownService();
+
 /**
- * Parses a html buffer as ascii in order to get the charset
- * @param ui8array ui8array of html content
+ * Reads HTML file from disk instead of fetching from remote URL
  */
-const getBufferEncoding = (ui8array: Uint8Array): string => {
-  const decoder = new TextDecoder("ascii");
-  const html = decoder.decode(ui8array);
-  const dom = new JSDOM(html);
-  const document = dom.window.document;
-  const contentType = document
-    .querySelector('meta[http-equiv="Content-Type"]')
-    ?.getAttribute("content");
-  if (contentType) {
-    const [, charset] = contentType.match(/charset=([^;]+)/) || [];
-    if (charset) {
-      return charset;
-    }
-  }
-  consola.warn("Defaulting to windows-1252. Check validity.");
-  return "windows-1252";
-};
-export const getDocument = async (currYear: number, ftc: boolean = false) => {
-  const res = await fetch(
-    !ftc
-      ? `https://firstfrc.blob.core.windows.net/frc${currYear}/Manual/HTML/${currYear}${
-          currYear < 2024 ? "FRC" : ""
-        }GameManual.htm`
-      : `https://ftc-resources.firstinspires.org/file/ftc/game/cm-html`
-  );
-
-  const arrBuffer = await res.arrayBuffer();
-  const ui8array = new Uint8Array(arrBuffer);
-  const charset = getBufferEncoding(ui8array);
-  const dec = new TextDecoder(charset); // word exports are in windows-1252 text format * just because*
-
-  const html = dec.decode(ui8array);
-  // Use jsdom to parse the HTML
+export const getDocumentFromFile = (filePath: string = "2026GameManual.html") => {
+  consola.info(`Reading HTML from ${filePath}`);
+  const html = fs.readFileSync(filePath, "utf8");
   const dom = new JSDOM(html);
   const document = dom.window.document;
   return document;
 };
+
 /**
- * Fixes image URLs since we arefn't hosted on the same path as the real manual
- * @param currYear Current year
- * @param document The document to fix
- * @param ftc      Whether it is the FTC manual
+ * Fixes image URLs since we aren't hosted on the same path as the real manual
  */
 export const fixImages = (
   currYear: number,
@@ -59,13 +28,11 @@ export const fixImages = (
 ) => {
   const images = document.querySelectorAll("img");
   const prefix = !ftc
-    ? `https://firstfrc.blob.core.windows.net/frc${currYear}/Manual/HTML/`
+    ? `https://assets.frctools.com/`
     : `https://ftc-resources.firstinspires.org/file/ftc/game/cm-html/`;
-  // Iterate through each image and update the src attribute
   images.forEach((image) => {
     const currentSrc = image.getAttribute("src");
     if (currentSrc) {
-      // Prefix the image URL with the specified prefix
       const newSrc = prefix + currentSrc;
       image.setAttribute("src", newSrc);
     }
@@ -74,8 +41,6 @@ export const fixImages = (
 
 /**
  * Switches rule links from anchor links to frctools.com links
- * @param currYear Current year
- * @param document
  */
 export const fixRuleLinks = (
   currYear: number,
@@ -93,7 +58,8 @@ export const fixRuleLinks = (
     }
   });
 };
-/*
+
+/**
  * Fixes the broken rule numbers in A tag names (2024 rules R901 to R906 are in attribute names as 815-820)
  */
 export const fixRuleNumbers = (
@@ -154,9 +120,6 @@ export const fixRuleNumbersFtc = (
 
 /**
  * Removes rulenumber class from broken list item "rules" that shouldn't be rules
- * @param currYear Current year
- * @param document Document object to fix
- * @param ftc Is ftc
  */
 export const fixListRules = (
   currYear: number,
@@ -189,6 +152,7 @@ export interface Rule {
 export interface AdditionalContent {
   type: AdditionalContentType;
 }
+
 export interface AdditionalContentImage extends AdditionalContent {
   type: AdditionalContentType.Image;
   text?: string;
@@ -213,10 +177,9 @@ export interface AdditionalContentText extends AdditionalContent {
   type: AdditionalContentType.Box | AdditionalContentType.Text;
   text: string;
 }
+
 /**
- * Replace specific text in document with tooltip element and
- * @param searchPattern Regex to search for
- * @param attributeValue Attribute value to set
+ * Replace specific text in document with tooltip element
  */
 const replaceTextInDocument = (
   document: Document,
@@ -266,16 +229,14 @@ const replaceTextInDocument = (
     let lastIndex = 0;
     let match;
 
-    regex.lastIndex = 0; // Reset regex state
+    regex.lastIndex = 0;
     while ((match = regex.exec(text)) !== null) {
-      // Add text before the match
       if (match.index > lastIndex) {
         container.appendChild(
           document.createTextNode(text.slice(lastIndex, match.index))
         );
       }
 
-      // Add the wrapped match
       const span = document.createElement("tooltip");
       span.setAttribute("label", attributeValue);
       span.textContent = match[0];
@@ -284,7 +245,6 @@ const replaceTextInDocument = (
       lastIndex = regex.lastIndex;
     }
 
-    // Add remaining text after last match
     if (lastIndex < text.length) {
       container.appendChild(document.createTextNode(text.slice(lastIndex)));
     }
@@ -301,7 +261,6 @@ const insertGlossaryMarkup = (
   if (ftc || (currYear !== 2024 && currYear !== 2025)) {
     return;
   }
-  // enumerate glossary items
   const glossarySection = [...document?.querySelectorAll("h1")]?.find(
     (heading) => heading.textContent?.includes("Glossary")
   )?.parentElement?.parentElement;
@@ -336,95 +295,116 @@ const insertGlossaryMarkup = (
     );
   }
 };
+
+/**
+ * Uses the new parsing approach: finds p/h4 elements matching rule pattern,
+ * then collects siblings until the next rule
+ */
 export const getRulesCorpus = (
   currYear: number,
   document: Document,
   ftc: boolean
 ) => {
-  const sectionsAndRules = document.querySelectorAll(
-    `div > h2, [class*="RuleNumber"]:has(a)`
-  );
   let output: Record<string, Rule> = {};
-  for (let rule of sectionsAndRules) {
-    if (rule.textContent?.trim() == "") {
-      consola.warn("Ignoring a rule");
+  
+  // Regex to find text matching (letter)(3 digit number) - e.g., A001, B123
+  const regex = /^([A-Z])(\d{3})/;
+  
+  // Get all p and h4 elements
+  const elements = [...document.querySelectorAll("p, h4")];
+  
+  for (let element of elements) {
+    let text = element.textContent || "";
+    
+    // Skip if doesn't match the regex pattern
+    if (!text.match(regex)) {
       continue;
     }
-    const section = rule.tagName.toLowerCase() == "h2";
+    
     const additionalContent: AdditionalContent[] = [];
-    const htmlContent: string[] = [];
-    const ruleSelector =
-      `:has(h2), h2, [class*=RulesNumber], [class*=TRules-Evergreen], [class*="RuleNumber"]:has(a)` +
-      (section ? `` : `:not([align="center"])`);
-    if (!rule.nextElementSibling) continue;
-    traverseUntilSelector(ruleSelector, rule, (element: Element) => {
-      htmlContent.push(element.outerHTML);
+    const htmlContent: string[] = [element.outerHTML];
+    let nextElement = element.nextElementSibling;
+    
+    // Collect all sibling elements until we hit the next rule
+    while (nextElement && !nextElement.textContent?.match(regex) && nextElement.className !== 's29' && !nextElement?.querySelector('.s29') && !nextElement?.querySelector('.s61') && !nextElement.className?.includes('s61')) {
+      text += nextElement.textContent;
+      htmlContent.push(nextElement.outerHTML);
+      
       additionalContent.push({
-        text: element.textContent,
-        type: element.querySelector('[class*="BlueBox"]')
+        text: nextElement.textContent,
+        type: nextElement.querySelector('[class*="BlueBox"]')
           ? AdditionalContentType.Box
           : AdditionalContentType.Text,
       } as AdditionalContentText);
-      let images = element.querySelectorAll("img");
+      
+      let images = nextElement.querySelectorAll("img");
       for (const image of images) {
         additionalContent.push({
-          type: "image",
+          type: AdditionalContentType.Image,
           src: image.src,
           width: image.width,
           height: image.height,
           alt: image.alt,
         } as AdditionalContentImage);
       }
-    });
-    const key =
-      (section
-        ? rule?.textContent?.match(/^\d+\.\d(\.\d)?/)?.[0]
-        : [...rule.querySelectorAll("a")]
-            .find((element) => {
-              return element.getAttribute("name")?.match(ruleRegex);
-            })
-            ?.getAttribute("name")) ??
-      rule?.querySelector("b:first-child")?.textContent?.trim() ??
-      rule
-        .querySelector(`span.Headline-Evergreen:first-child`)
-        ?.textContent?.trim() ??
-      `FIXME${Math.floor(Math.random() * 100)}`;
-    const sectionText = rule.parentElement?.querySelector<HTMLHeadingElement>('div > h1')?.textContent?.replace(/\s+|\n/, ' - ').replace(/\n/g, " ") || "";
-    output[key] = {
-      name: key,
-      type: section ? Type.Section : Type.Rule,
-      text: htmlContent.join("\n"),
-      markdownContent: turndown.turndown(htmlContent.join("\n")),
-      summary: rule.textContent || "",
-      additionalContent,
-      evergreen: false,
-      textContent: rule?.textContent || "",
-      section: sectionText
-    };
+      
+      nextElement = nextElement.nextElementSibling;
+    }
+    
+    // Extract the rule key
+    const matchResult = text.match(regex);
+    if (matchResult) {
+      let key = matchResult[0];
+      const sectionText = element.parentElement?.querySelector<HTMLHeadingElement>('div > h1')?.textContent?.replace(/\s+|\n/, ' - ').replace(/\n/g, " ") || "";
+      
+      output[key] = {
+        name: key,
+        type: Type.Rule,
+        text: htmlContent.join("\n"),
+        markdownContent: turndown.turndown(htmlContent.join("\n")),
+        summary: element.textContent || "",
+        additionalContent,
+        evergreen: false,
+        textContent: text,
+        section: sectionText
+      };
+    }
   }
+  
+  // Parse h3 tags with data-list-text attribute for sections
+  const h3Elements = [...document.querySelectorAll("[data-list-text]")];
+  const h3Regex = /^(\d+)(\.\d+)?/;
+  
+  for (let element of h3Elements) {
+    let text = element.textContent || "";
+    const dataListText = element.getAttribute("data-list-text");
+    
+    if (!dataListText || !dataListText.match(h3Regex)) {
+      continue;
+    }
+    
+    let html = element.outerHTML;
+    const matchResult = dataListText.match(h3Regex);
+    
+    if (matchResult) {
+      let key = matchResult[0];
+      const sectionText = element.parentElement?.querySelector<HTMLHeadingElement>('div > h1')?.textContent?.replace(/\s+|\n/, ' - ').replace(/\n/g, " ") || "";
+      
+      output[key] = {
+        name: key,
+        type: Type.Section,
+        text: html,
+        markdownContent: turndown.turndown(html),
+        summary: text,
+        additionalContent: [],
+        evergreen: false,
+        textContent: text,
+        section: sectionText
+      };
+    }
+  }
+  
   return output;
-};
-
-/**
- * Recursively traverses DOM elements until a matching selector is found.
- * @param {string} selector The CSS selector to match.
- * @param {Element} element The element to start traversing from.
- * @param {Function} callback The function to call for each matching element. **Is** called on passed in element.
- * @returns {void}
- * @private
- */
-const traverseUntilSelector = (
-  selector: string,
-  element: Element,
-  callback: Function
-) => {
-  callback(element);
-  let currentElement = element.nextElementSibling;
-  while (currentElement && !currentElement.matches(selector)) {
-    callback(currentElement);
-    if (!currentElement.nextElementSibling) break;
-    currentElement = currentElement.nextElementSibling;
-  }
 };
 
 export const scrapeRules = async () => {
@@ -441,15 +421,10 @@ export const scrapeRules = async () => {
     : process.env.YEAR_SPECIFIC
     ? parseInt(process.env.YEAR_SPECIFIC)
     : new Date().getFullYear();
-  if (
-    currYear == 2025 &&
-    !ftc &&
-    /* before january 4th*/ new Date() < new Date("2025-01-04")
-  ) {
-    return;
-  }
-
-  const document = await getDocument(currYear, ftc);
+  
+  // Read from local file instead of fetching
+  const document = getDocumentFromFile("2026GameManual.html");
+  
   const enabledPreprocessors = [
     fixImages,
     fixRuleLinks,
@@ -458,10 +433,12 @@ export const scrapeRules = async () => {
     fixListRules,
     insertGlossaryMarkup,
   ];
+  
   for (const preprocessor of enabledPreprocessors) {
     consola.info(`Running preprocessor ${preprocessor.name}`);
     preprocessor(currYear, document, ftc);
   }
+  
   const rules = getRulesCorpus(currYear, document, ftc);
   const fixmeCount = Object.keys(rules).filter((name) =>
     name.includes("FIXME")
@@ -471,7 +448,9 @@ export const scrapeRules = async () => {
   }
 
   if (process.env.DRY_RUN === "true") {
-    consola.log("Dry run. No changes made to Meilisearch.");
+    consola.log("Dry run. Writing rules to matches.json...");
+    fs.writeFileSync("matches.json", JSON.stringify(rules, null, 2));
+    consola.log(`Found ${Object.values(rules).length} rules`);
     return;
   }
 
@@ -506,6 +485,7 @@ export const scrapeRules = async () => {
       throw error;
     }
   }
+  
   const attributes = await idx.getFilterableAttributes();
   const wantedAttributes = [
     "text",
@@ -556,6 +536,7 @@ export const scrapeRules = async () => {
   ) {
     await client.index(index).updateEmbedders(wantedEmbedderSettings);
   }
+  
   consola.log(`Uploading ${Object.keys(rules).length} rules`);
   client
     .index(index)
@@ -571,4 +552,5 @@ export const scrapeRules = async () => {
     .then((res) => consola.log(res))
     .catch((err) => consola.error(err));
 };
+
 await scrapeRules();

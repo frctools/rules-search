@@ -13,7 +13,7 @@
   "dependencies": {
     "@neoconfetti/vue": "^2.2.1",
     "@nuxt/fonts": "^0.11.0",
-    "@nuxt/ui": "^3.0.2",
+    "@nuxt/ui": "^4.3.0",
     "@nuxtjs/plausible": "^1.2.0",
     "@scalar/nuxt": "^0.3.19",
     "@types/jsdom": "^21.1.7",
@@ -24,7 +24,7 @@
     "linkedom": "^0.18.9",
     "meilisearch": "^0.49.0",
     "nitro-cloudflare-dev": "^0.2.1",
-    "nuxt": "^3.16.2",
+    "nuxt": "^4.2.2",
     "scule": "^1.3.0",
     "turndown": "^7.2.0",
     "unenv": "^2.0.0-rc.15",

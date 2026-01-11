@@ -4,6 +4,18 @@
     <UContainer class="flex flex-col gap-4 mt-4" v-if="!error">
       <UBreadcrumb :items="items" />
       <RenderHtml :html="data.text" />
+
+      <div v-if="similarRules && similarRules.length > 0" class="mt-8">
+        <h2 class="text-2xl font-bold mb-4">Similar Rules</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <ULink :to="`/${year}/rule/${similarRule.name}`" v-for="similarRule in similarRules" :key="similarRule.id" >
+          <UPageCard :title="`${upperFirst(similarRule.type)} ${similarRule.name}`" :description="similarRule.summary" icon="i-lucide-scale" :ui="{
+            description: 'line-clamp-4'
+          }"></UPageCard>
+        </ULink>
+        </div>
+      </div>
+      
       </UContainer
     >
     <UContainer class="flex flex-col gap-4 mt-4" v-else>
@@ -48,6 +60,14 @@ const { data, status, error, clear } = await useFetch("/api/rule", {
     query: rule.value,
   },
 });
+
+const { data: similarRules } = await useFetch("/api/similar", {
+  query: {
+    year: year.value,
+    id: data.value.id,
+  },
+});
+
 const items = computed(() => {
   return [
     {
