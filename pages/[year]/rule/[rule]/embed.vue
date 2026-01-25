@@ -1,6 +1,6 @@
 <template>
   <div>
-    <UContainer class="flex flex-col gap-4" v-if="!error">
+    <UContainer class="flex flex-col gap-4 dark:bg-[#222]" v-if="!error">
 
       <div
         ref="container"
