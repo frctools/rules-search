@@ -1,0 +1,24 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "imagen",
+  "main": "index.js",
+  "compatibility_date": "2023-03-14",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "browser": {
+    "binding": "BROWSER"
+  },
+  "kv_namespaces": [
+    {
+      "binding": "SCREENSHOT_CACHE",
+      "id": "3d456043fe94475dbc68d29fcc0582c2"
+    }
+  ],
+  "observability": {
+    "logs": {
+      "enabled": true,
+      "invocation_logs": true
+    }
+  }
+}

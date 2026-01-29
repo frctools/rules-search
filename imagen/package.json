@@ -11,7 +11,9 @@
   "license": "ISC",
   "dependencies": {
     "h3": "^1.10.1",
-    "listhen": "^1.6.0",
-    "puppeteer": "^22.0.0"
+    "listhen": "^1.6.0"
+  },
+  "devDependencies": {
+    "@cloudflare/puppeteer": "^1.0.5"
   }
 }
