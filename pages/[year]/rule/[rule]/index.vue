@@ -2,30 +2,31 @@
   <div>
     <Nav v-model="yearNav" page="Search" />
     <UContainer class="flex flex-col gap-4 mt-4" v-if="!error">
+      <ULink :to="`/${useYearsNav()[0].value}/rule/${rule}`" v-if="year != useYearsNav()[0].value && !year.includes('ftc')">
+        <UAlert title="Heads up!"
+          :description="`You are viewing a rule from the ${year} manual. Click here to see the latest version.`" />
+      </ULink>
+
       <UBreadcrumb :items="items" />
       <RenderHtml :html="data.text" />
 
       <div v-if="similarRules && similarRules.length > 0" class="mt-8">
         <h2 class="text-2xl font-bold mb-4">Similar Rules</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <ULink :to="`/${year}/rule/${similarRule.name}`" v-for="similarRule in similarRules" :key="similarRule.id" >
-          <UPageCard :title="`${upperFirst(similarRule.type)} ${similarRule.name}`" :description="similarRule.summary" icon="i-lucide-scale" :ui="{
-            description: 'line-clamp-4'
-          }"></UPageCard>
-        </ULink>
+          <ULink :to="`/${year}/rule/${similarRule.name}`" v-for="similarRule in similarRules" :key="similarRule.id">
+            <UPageCard :title="`${upperFirst(similarRule.type)} ${similarRule.name}`" :description="similarRule.summary"
+              icon="i-lucide-scale" :ui="{
+                description: 'line-clamp-4'
+              }"></UPageCard>
+          </ULink>
         </div>
       </div>
-      
-      </UContainer
-    >
+
+    </UContainer>
     <UContainer class="flex flex-col gap-4 mt-4" v-else>
-      <div
-        class="flex flex-col items-center justify-center flex-1 px-6 py-14 sm:px-14"
-      >
-        <UIcon
-          name="heroicons:exclamation-circle"
-          class="size-10 mx-auto text-gray-400 dark:text-gray-500 mb-4"
-        ></UIcon>
+      <div class="flex flex-col items-center justify-center flex-1 px-6 py-14 sm:px-14">
+        <UIcon name="heroicons:exclamation-circle" class="size-10 mx-auto text-gray-400 dark:text-gray-500 mb-4">
+        </UIcon>
 
         <p class="text-sm text-center text-gray-900 dark:text-white">
           Something went wrong
@@ -92,17 +93,17 @@ useSeoMeta({
   ogImage: data.value.additionalContent.find((x) => x?.type == "image")?.src,
   description: data.value.summary,
   ogDescription: data.value.summary,
-  
+
 });
 useHead({
-   link: [
-      {
-         href: `https://frctools.com/api/apub?year=${year.value}&query=${rule.value}`,
-         rel: "alternate",
-         title: "ActivityPub (JSON)",
-         type: "application/activity+json"
-      }
-   ]
+  link: [
+    {
+      href: `https://frctools.com/api/apub?year=${year.value}&query=${rule.value}`,
+      rel: "alternate",
+      title: "ActivityPub (JSON)",
+      type: "application/activity+json"
+    }
+  ]
 })
 </script>
 

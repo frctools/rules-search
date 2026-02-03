@@ -2,6 +2,11 @@
   <div>
     <Nav v-model="yearNav" page="Search" />
     <UContainer class="pt-4 flex flex-col gap-4">
+      <ULink to="/" v-if="year != useYearsNav()[0].value && !year.includes('ftc')">
+        <UAlert title="Heads up!"
+          :description="`You are viewing rules from the ${year} manual. Click here to see the latest version.`" />
+      </ULink>
+
       <div
         class="flex flex-col md:flex-row justify-between gap-2 items-center flex-wrap"
       >
