@@ -1,75 +1,46 @@
-# Nuxt Minimal Starter
+# FRCTools Rules Search
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+Search and browse FRC and FTC rule manuals quickly. 
 
-## Setup
+## What you can do
 
-Make sure to install dependencies:
+- Search rules by keyword or rule number
+- Switch between seasons and FRC/FTC manuals
+- Narrow results by section
+- Share direct links to a rule page
+
+## How to use it
+
+1. Pick the season from the top nav.
+2. Type a keyword like "batteries" or a rule like "R101".
+3. Use the section filter to narrow results if you get too many hits.
+4. Open a result to see related rules.
+
+Tip: If results feel off, toggle semantic search to compare with classic search.
+
+## Local development (optional)
+
+If you want to run the site locally:
 
 ```bash
-# npm
 npm install
-
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
-```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
-```bash
-# npm
 npm run dev
-
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
 ```
 
-## Production
+Then open `http://localhost:3000`.
 
-Build the application for production:
+## Maintainers: Updating rules
+
+Rules are indexed from the official manual HTML. To update a season:
 
 ```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
+MEILI_WRITE_KEY=... GEMINI_KEY=... YEAR_SPECIFIC=2026 npm run rules:update
 ```
 
-Locally preview production build:
+This is run in CI automatically every day during the build season.
 
-```bash
-# npm
-npm run preview
+More details and kickoff notes live in [importing-a-new-year.md](importing-a-new-year.md).
 
-# pnpm
-pnpm preview
+## Optional services
 
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+The [imagen](imagen) folder contains a Cloudflare Worker used to generate rule screenshots. It is deployed separately from the Nuxt app.
