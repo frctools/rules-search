@@ -10,7 +10,7 @@ jobs:
   run-node-script:
     strategy:
       matrix:
-        ftc: [true]
+        ftc: [false, true]
         year: [2026]
 
     runs-on: ubuntu-latest
