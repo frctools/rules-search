@@ -9,6 +9,7 @@ const takeScreenshot = async (env, rule) => {
       defaultViewport: {
         width: 2400,
         height: 1080,
+        deviceScaleFactor: 2 
       },
     });
 
