@@ -34,3 +34,7 @@ div:is([style*="margin-left:1.0in;margin-right:1.0in"]):has(.BlueBox) {
   font-family: "Bricolage Grotesque";
   /* silly little hack to make fonts plugin install it */
 }
+
+.BlueBox > .HyperlinksChar {
+  color: var(--color-black) !important;
+}
