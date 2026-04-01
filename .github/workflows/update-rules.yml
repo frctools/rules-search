@@ -34,3 +34,4 @@ jobs:
           YEAR_SPECIFIC: ${{ matrix.year }}
           MEILI_WRITE_KEY: ${{ secrets.MEILI_WRITE_KEY }}
           GEMINI_KEY: ${{ secrets.GEMINI_KEY }}
+          CLEAR: "true"
