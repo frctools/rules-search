@@ -4,6 +4,9 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ["@nuxt/ui", "@nuxt/fonts", "@scalar/nuxt", "@nuxtjs/plausible"],
   css: ["~/assets/css/main.css"],
+  runtimeConfig: {
+    geminiKey: process.env.GEMINI_KEY,
+  },
 
   fonts: {
     families: [{ name: "Bricolage Grotesque", provider: "google" }],

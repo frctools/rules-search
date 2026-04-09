@@ -16,13 +16,16 @@
           size="lg"
           v-model="query"
         />
-        <div class="flex gap-2 items-center justify-between ">
+        <div class="flex gap-2 items-center justify-between md:flex-row flex-col w-full md:w-auto ">
+          <UButton :to="`/${year}/advanced`" variant="outline" >
+            Advanced Search
+          </UButton>
           <USelectMenu
             v-model="selectedSections"
             multiple
             :items="sections"
             :loading="sectionsStatus == 'pending'"
-            class="max-w-44 md:max-w-48"
+            class="max-w-full md:max-w-48"
             default-value="sections"
           />
 

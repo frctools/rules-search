@@ -298,7 +298,7 @@ const insertGlossaryMarkup = (
   document: Document,
   ftc: boolean
 ) => {
-  if (ftc || (currYear !== 2024 && currYear !== 2025)) {
+  if (ftc || (currYear !== 2024 && currYear !== 2025 && currYear !== 2026)) {
     return;
   }
   // enumerate glossary items
@@ -527,9 +527,9 @@ export const scrapeRules = async () => {
   const wantedEmbedderSettings: Embedders = {
     default: {
       source: "rest",
-      url: `https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-exp-03-07:embedContent?key=${process.env.GEMINI_KEY}`,
+      url: `https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-2-preview:embedContent?key=${process.env.GEMINI_KEY}`,
       request: {
-        model: "models/gemini-embedding-exp-03-07",
+        model: "models/gemini-embedding-2-preview",
         content: {
           parts: [
             {

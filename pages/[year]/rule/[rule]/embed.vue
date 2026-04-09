@@ -53,7 +53,6 @@ const el = useTemplateRef("container");
 const isOverflowing = ref(false);
 
 const updateMainWindow = () => {
-   console.log(el.value.clientHeight)
   window.parent.postMessage(`${el.value?.clientHeight}`, '*');
 };
 useResizeObserver(el, (entries) => {
