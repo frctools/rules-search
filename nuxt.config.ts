@@ -18,6 +18,18 @@ export default defineNuxtConfig({
   },
 
   nitro: {
+    cloudflare: {
+      deployConfig: true,
+      nodeCompat: true,
+      wrangler: {
+        "observability": {
+          "logs": {
+            "enabled": true,
+            "invocation_logs": true
+          },
+        }
+      }
+    },
     experimental: {
       openAPI: true,
     },
@@ -35,13 +47,17 @@ export default defineNuxtConfig({
     apiHost: "https://possible.grahamsh.com",
   },
   vite: {
-   server: {allowedHosts: ['.gitpod.io']},
+    server: { allowedHosts: ['.gitpod.io'] },
     build: {
       rollupOptions: {
+
         external: ["canvas"],
       },
     },
     resolve: {
+
+
+
       external: ["canvas"],
     },
   },
