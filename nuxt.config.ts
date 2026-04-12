@@ -21,11 +21,10 @@ export default defineNuxtConfig({
     experimental: {
       openAPI: true,
     },
+    preset: 'cloudflare_module'
   },
   scalar: {
-    spec: {
-      url: "/_openapi.json",
-    },
+
   },
   app: {
     head: {
@@ -46,4 +45,5 @@ export default defineNuxtConfig({
       external: ["canvas"],
     },
   },
+
 });
