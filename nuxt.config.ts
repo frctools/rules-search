@@ -2,7 +2,7 @@
 export default defineNuxtConfig({
   compatibilityDate: "2024-11-01",
   devtools: { enabled: true },
-  modules: ["@nuxt/ui", "@nuxt/fonts", "@scalar/nuxt", "@nuxtjs/plausible"],
+  modules: ["@nuxt/ui", /*"@nuxt/fonts",*/"@nuxtjs/plausible"],
   css: ["~/assets/css/main.css"],
   runtimeConfig: {
     geminiKey: process.env.GEMINI_KEY,
@@ -31,13 +31,11 @@ export default defineNuxtConfig({
       }
     },
     experimental: {
-      openAPI: true,
+      //openAPI: true,
     },
     preset: 'cloudflare_module'
   },
-  scalar: {
-
-  },
+  
   app: {
     head: {
       link: [{ rel: "icon", type: "image/x-icon", href: "/logo.svg" }],
@@ -50,14 +48,10 @@ export default defineNuxtConfig({
     server: { allowedHosts: ['.gitpod.io'] },
     build: {
       rollupOptions: {
-
-        external: ["canvas"],
+      external: ["canvas"],
       },
     },
     resolve: {
-
-
-
       external: ["canvas"],
     },
   },

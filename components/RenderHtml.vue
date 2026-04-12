@@ -1,12 +1,13 @@
 
 
 <script lang="ts">
-/* @ts-ignore */
-import { parse } from "dom-parse"; 
-
 export default {
   props: ["html", "highlights"],
   async setup(props) {
+    const { parse } = import.meta.server
+      ? await import("dom-parse/dist/node.js")
+      : await import("dom-parse/dist/browser.js");
+
     const Tooltip = resolveComponent("Tooltip");
     let html = `<div class="prose max-w-full dark:prose-invert overflow-x-auto px-4">${props.html}</div>`;
     const doc = parse(html) as DocumentFragment;
