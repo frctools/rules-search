@@ -157,7 +157,7 @@ const runAdvancedSearch = async () => {
 };
 
 useSeoMeta({
-  title: "Advanced Search the manual",
+  title: "Advanced Search",
 });
 
 const exampleQuestions = [
