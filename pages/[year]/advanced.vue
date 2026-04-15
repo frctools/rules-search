@@ -12,7 +12,7 @@
 
 
 
-      <div class="flex flex-col gap-3">
+      <form class="flex flex-col gap-3" @submit.prevent="runAdvancedSearch">
         <UInput
           v-model="query"
           size="lg"
@@ -31,15 +31,15 @@
 
           <div class="flex w-full gap-2 md:w-auto md:items-center">
             <UButton
+              type="submit"
               :loading="loading"
               :disabled="!query.trim().length"
-              @click="runAdvancedSearch"
             >
             Search
             </UButton>
           </div>
         </div>
-      </div>
+      </form>
 
       <UAlert
         v-if="errorMessage"
@@ -135,6 +135,11 @@ const { data: sections, status: sectionsStatus } = await useFetch("/api/facets",
 const selectedSections = ref([]);
 
 const runAdvancedSearch = async () => {
+  const trimmedQuery = query.value.trim();
+  if (!trimmedQuery) {
+    return;
+  }
+
   errorMessage.value = "";
   result.value = null;
   loading.value = true;
@@ -143,7 +148,7 @@ const runAdvancedSearch = async () => {
     result.value = await $fetch("/api/advanced-search", {
       method: "POST",
       body: {
-        query: query.value,
+        query: trimmedQuery,
         year: year.value,
         sections: selectedSections.value,
       },
