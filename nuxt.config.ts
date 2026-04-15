@@ -18,6 +18,12 @@ export default defineNuxtConfig({
   },
 
   nitro: {
+    externals: {
+      inline: ["canvas"],
+    },
+    rollupConfig: {
+      external: ["canvas"],
+    },
     cloudflare: {
       deployConfig: true,
       nodeCompat: true,
@@ -30,6 +36,12 @@ export default defineNuxtConfig({
         }
       }
     },
+        unenv: {
+      alias: {
+        'punycode/': 'node:punycode',
+      }
+    },
+
     experimental: {
       //openAPI: true,
     },

@@ -1,20 +1,17 @@
-
-
 <script lang="ts">
+import { parseHtmlFragmentBrowser } from "~/utils/parseHtmlFragmentBrowser";
 export default {
   props: ["html", "highlights"],
-  async setup(props) {
-    const { parse } = import.meta.server
-      ? await import("dom-parse/dist/node.js")
-      : await import("dom-parse/dist/browser.js");
-
+  setup(props) {
+    const parse = parseHtmlFragmentBrowser;
+    
+    const Skeleton = resolveComponent("USkeleton");
+    const ClientOnly = resolveComponent("ClientOnly");
     const Tooltip = resolveComponent("Tooltip");
-    let html = `<div class="prose max-w-full dark:prose-invert overflow-x-auto px-4">${props.html}</div>`;
-    const doc = parse(html) as DocumentFragment;
     function isElement(node: ChildNode): node is Element {
       return node.nodeType === 1;
     }
-    function processNode(node?: Element | ChildNode ) : (() => any | null) | null{
+    function processNode(node?: Element | ChildNode): (() => any | null) | null {
       if (!node || typeof node == "undefined") return null;
       if (node.nodeType === 3) {
         const text = node.textContent;
@@ -37,11 +34,11 @@ export default {
         const tag = node.tagName?.toLowerCase();
 
         const props: Record<string, string> = {};
-      
+
         Array.from(node.attributes).forEach((attr) => {
           props[attr.name] = attr.value;
         });
-        
+
 
         const children = Array.from(node.childNodes)
           .map(processNode)
@@ -50,14 +47,26 @@ export default {
           h(
             tag == "tooltip" ? Tooltip : tag,
             props,
-            tag == 'tooltip' ? {default:()=> node.textContent} :children.map((child) => child?.())
+            tag == 'tooltip' ? { default: () => node.textContent } : children.map((child) => child?.())
           );
       }
 
       return null;
     }
 
-    return processNode(doc.children[0]);
+    return () =>
+      h(
+        ClientOnly,
+        {},
+        {
+          placeholder: () => h(Skeleton, { class: "w-full h-6 mb-2" }),
+          default: () => {
+            const html = `<div class="prose max-w-full dark:prose-invert overflow-x-auto px-4">${props.html}</div>`;
+            const doc = parse(html) as DocumentFragment;
+            return processNode(doc.children[0])?.();
+          },
+        }
+      );
   },
 };
 </script>
