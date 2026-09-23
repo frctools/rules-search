@@ -10,6 +10,11 @@ export const useYearsNav = () => {
       emoji: "⚒️",
     },
     {
+      label: "2027 - Biobuzz",
+      value: "2027-ftc",
+      emoji: "🐝"
+    },
+    {
       label: "2026 - Decode",
       value: "2026-ftc",
       emoji: "🔑",

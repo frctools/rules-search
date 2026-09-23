@@ -437,7 +437,7 @@ export const scrapeRules = async () => {
   }
   const ftc = process.env.FTC == "true";
   const currYear = ftc
-    ? 2026
+    ? 2027
     : process.env.YEAR_SPECIFIC
     ? parseInt(process.env.YEAR_SPECIFIC)
     : new Date().getFullYear();
