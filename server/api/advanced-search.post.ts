@@ -40,7 +40,7 @@ type GeminiResponseSchema = {
 };
 
 const MEILI_READ_KEY = "2db41b6a1ce3e0daf62e36d67f996e60f41a07807588971a050d7bfb74df5efe";
-const GEMINI_MODEL = "gemini-3.1-flash-lite-preview";
+const GEMINI_MODEL = "gemini-3.5-flash-lite";
 
 const escapeFilterValue = (value: string) => value.replace(/'/g, "\\'");
 
